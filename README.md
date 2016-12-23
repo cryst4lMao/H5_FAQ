@@ -691,10 +691,9 @@ function detectOrientatioin(){
 ```
 
 
-####常用的移动端框架
 
-jquery.js
-   - [api](http://jquery.cuishifeng.cn/)
+
+####常用的移动端框架
 
 zepto.js
    - [官网](http://zeptojs.com/)
@@ -718,6 +717,12 @@ hcharts.js
 
 
 #####一些概念
+```
+1.框架（framework）和库 （library）
+A：Framework 帮你设计架构，而 library 帮你写代码
+   https://www.zhihu.com/question/28696660
+
+```
 
 
 
