@@ -692,8 +692,10 @@ function detectOrientatioin(){
 
 
 ####常用的移动端框架
+
 jquery.js
    - [api](http://jquery.cuishifeng.cn/)
+
 zepto.js
    - [官网](http://zeptojs.com/)
    - [中文网](http://www.css88.com/doc/zeptojs_api/)
@@ -701,10 +703,13 @@ zepto.js
    - [tap事件](https://github.com/madrobby/zepto/blob/master/src/touch.js)
 
 ####常用的插件
+
 superSlider.js
    - [官网](http://www.superslide2.com/)
+
 swiper.js
    - [中文网](http://www.swiper.com.cn/)
+
 hcharts.js
    - [demo](http://www.hcharts.cn/demo/highcharts)
    - [api](http://api.hcharts.cn/)
