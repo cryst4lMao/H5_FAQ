@@ -68,10 +68,20 @@ if (/Android (\d+\.\d+)/.test(ua)){
 - 页面缓存设置
 ```
 <!-- 清除缓存 -->
+Cache-Control头域
+Cache-Control指定请求和响应遵循的缓存机制。在请求消息或响应消息中设置Cache-Control并不会修改另一个消息处理过程中的缓存处理过程。
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="cache-control" content="no-cache">
 <meta http-equiv="expires" content="0">
+清除浏览器中的缓存，它和其它几句合起来用，就可以使你再次进入曾经访问过的页面时，ie浏览器必须从服务端下载最新的内容，达到刷新的效果。
+
+<!--禁止百度转码-->
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+转码相当于拦截了所有来自手机的流量，域名都是baidu.com
 ```
+
+
 
 - 其他meta标签
 ```
@@ -682,10 +692,27 @@ function detectOrientatioin(){
 
 
 ####常用的移动端框架
+jquery.js
+   - [api](http://jquery.cuishifeng.cn/)
 zepto.js
    - [官网](http://zeptojs.com/)
    - [中文网](http://www.css88.com/doc/zeptojs_api/)
    - [浏览器检测](https://github.com/madrobby/zepto/blob/master/src/detect.js)
    - [tap事件](https://github.com/madrobby/zepto/blob/master/src/touch.js)
+
+####常用的插件
+superSlider.js
+   - [官网](http://www.superslide2.com/)
+swiper.js
+   - [中文网](http://www.swiper.com.cn/)
+hcharts.js
+   - [demo](http://www.hcharts.cn/demo/highcharts)
+   - [api](http://api.hcharts.cn/)
+
+####程序安装
+
+
+#####一些概念
+
 
 
