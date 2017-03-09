@@ -690,14 +690,191 @@ function detectOrientatioin(){
 }
 ```
 - 一些炸鸡
+```
 1.IOS的H5页面滑动不流畅的问题： -webkit-overflow-scrolling : touch;
+
 2.时间轴 http://www.114time.com/file/gettime.php
+
 3.inline-block 和margin 0 auto 失效
    ans：id为father的div,原为块状元素（display:block;），独占一行。当{display:table-cell}或{display:inline-block;}时，#father变为行内元素（display:inline-block;），不能独占一行，{margin:0 auto；}就失效了。
   
   ex：display:inline-block的几个应用及bug   http://www.css88.com/archives/1465
-   
-   
+  
+4.图片懒加载与节流函数
+对页面加载速度影响最大的就是图片，一张普通的图片可以达到几M的大小，而代码也许就只有几十KB。当页面图片很多时，页面的加载速度缓慢，几S钟内页面没有加载完成，也许会失去很多的用户。
+
+所以，对于图片过多的页面，为了加速页面加载速度，所以很多时候我们需要将页面内未出现在可视区域内的图片先不做加载， 等到滚动到可视区域后再去加载。这样子对于页面加载性能上会有很大的提升，也提高了用户体验。
+
+将页面中的img标签src指向一张小图片或者src为空，然后定义data-src（这个属性可以自定义命名，我才用data-src）属性指向真实的图片。src指向一张默认的图片，否则当src为空时也会向服务器发送一次请求。可以指向loading的地址
+js
+<script>
+    var num = document.getElementsByTagName('img').length;
+    var img = document.getElementsByTagName("img");
+    var n = 0; //存储图片加载到的位置，避免每次都从第一张图片开始遍历
+    lazyload(); //页面载入完毕加载可是区域内的图片
+    window.onscroll = lazyload;
+    function lazyload() { //监听页面滚动事件
+        var seeHeight = document.documentElement.clientHeight; //可见区域高度
+        var scrollTop = document.documentElement.scrollTop || document.body.scrollTop; //滚动条距离顶部高度
+        for (var i = n; i < num; i++) {
+            if (img[i].offsetTop < seeHeight + scrollTop) {
+                if (img[i].getAttribute("src") == "default.jpg") {
+                    img[i].src = img[i].getAttribute("data-src");
+                }
+                n = i + 1;
+            }
+        }
+    }
+</script>
+
+
+jquery
+<script>
+    var n = 0,
+        imgNum = $("img").length,
+        img = $('img');
+    lazyload();
+    $(window).scroll(lazyload);
+    function lazyload(event) {
+        for (var i = n; i < imgNum; i++) {
+            if (img.eq(i).offset().top < parseInt($(window).height()) + parseInt($(window).scrollTop())) {
+                if (img.eq(i).attr("src") == "default.jpg") {
+                    var src = img.eq(i).attr("data-src");
+                    img.eq(i).attr("src", src);
+                    n = i + 1;
+                }
+            }
+        }
+    }
+</script>
+
+
+// 简单的节流函数
+//fun 要执行的函数
+//delay 延迟
+//time  在time时间内必须执行一次
+function throttle(fun, delay, time) {
+    var timeout,
+        startTime = new Date();
+    return function() {
+        var context = this,
+            args = arguments,
+            curTime = new Date();
+        clearTimeout(timeout);
+        // 如果达到了规定的触发时间间隔，触发 handler
+        if (curTime - startTime >= time) {
+            fun.apply(context, args);
+            startTime = curTime;
+            // 没达到触发间隔，重新设定定时器
+        } else {
+            timeout = setTimeout(function(){
+	            fun.apply(context, args);
+            }, delay);
+        }
+    };
+};
+// 实际想绑定在 scroll 事件上的 handler
+function lazyload(event) {}
+// 采用了节流函数
+window.addEventListener('scroll',throttle(lazyload,500,1000));
+
+5.web storage和cookie的区别 loaclStorage和sessionStorage的区别
+一. web storage和cookie的区别
+Web Storage的概念和cookie相似，区别是它是为了更大容量存储设计的。Cookie的大小是受限的，并且每次你请求一个新的页面的时候Cookie都会被发送过去，这样无形中浪费了带宽，另外cookie还需要指定作用域，不可以跨域调用。
+除此之外，Web Storage拥有setItem,getItem,removeItem,clear等方法，不像cookie需要前端开发者自己封装setCookie，getCookie。
+但是Cookie也是不可以或缺的：Cookie的作用是与服务器进行交互，作为HTTP规范的一部分而存在 ，而Web Storage仅仅是为了在本地“存储”数据而生（来自@otakustay 的纠正）
+
+
+二.
+sessionStorage用于本地存储一个会话（session）中的数据，这些数据只有在同一个会话中的页面才能访问并且当会话结束后数据也随之销毁。因此sessionStorage不是一种持久化的本地存储，仅仅是会话级别的存储。
+而localStorage用于持久化的本地存储，除非主动删除数据，否则数据是永远不会过期的。
+
+三. localStorage和sessionStorage操作
+localStorage和sessionStorage都具有相同的操作方法，例如setItem、getItem和removeItem等
+localStorage和sessionStorage的方法
+setItem存储value
+用途：将value存储到key字段
+用法：.setItem( key, value)
+代码示例：
+	sessionStorage.setItem("key", "value"); 	localStorage.setItem("site", "js8.in");
+getItem获取value
+用途：获取指定key本地存储的值
+用法：.getItem(key)
+代码示例：
+	var value = sessionStorage.getItem("key"); 	var site = localStorage.getItem("site");
+removeItem删除key
+用途：删除指定key本地存储的值
+用法：.removeItem(key)
+代码示例：
+	sessionStorage.removeItem("key"); 	localStorage.removeItem("site");
+clear清除所有的key/value
+用途：清除所有的key/value
+用法：.clear()
+代码示例：
+	sessionStorage.clear(); 	localStorage.clear();
+其他操作方法：点操作和[]
+web Storage不但可以用自身的setItem,getItem等方便存取，也可以像普通对象一样用点(.)操作符，及[]的方式进行数据存储，像如下的代码：
+var storage = window.localStorage; storage.key1 = "hello"; storage["key2"] = "world"; console.log(storage.key1); console.log(storage["key2"]);
+localStorage和sessionStorage的key和length属性实现遍历
+sessionStorage和localStorage提供的key()和length可以方便的实现存储的数据遍历，例如下面的代码：
+var storage = window.localStorage; for (var i=0, len = storage.length; i  <  len; i++){     var key = storage.key(i);     var value = storage.getItem(key);     console.log(key + "=" + value); }
+
+四. storage事件
+storage还提供了storage事件，当键值改变或者clear的时候，就可以触发storage事件，如下面的代码就添加了一个storage事件改变的监听：
+if(window.addEventListener){ 	
+window.addEventListener("storage",handle_storage,false); }else if(window.attachEvent){ 	window.attachEvent("onstorage",handle_storage); } function handle_storage(e){ 	if(!e){e=window.event;}	 }
+
+6.rem布局引发一连串事件
+1.font-size:62.5%;
+任意浏览器的默认字体高都是16px。所以未经调整的浏览器都符合: 1em=16px，所以10px=0.625em。
+
+ps:但是，这个换算在IE浏览器下不成立，1.2em会比12px稍大一些
+解决办法是把html标签样式中的62.5%改成63%，即：html { font-size: 63%; }
+
+2.  关于em
+2.1 一般都是以<body>的“font-size”为基准。比如说我们使用“1em”等于“10px”来改变默认值“1em=16px”，这样一来，我们设置字体大小相当于“14px”时，只需要将其值设置为“1.4em”
+2.2 em会继承父级元素的字体大小。
+
+在使用“em”作单位时，一定需要知道其父元素的设置，因为“em”就是一个相对值，而且是一个相对于父元素的值，其真正的计算公式是：
+1 ÷ 父元素的font-size × 需要转换的像素值 = em值
+
+3.rem
+rem是相对于根元素<html>
+
+我在根元素<html>中定义了一个基本字体大小为62.5%（也就是10px。设置这个值主要方便计算，如果没有设置，将是以“16px”为基准 ） 
+
+用em，rem，在段落头部空两行直接可写 text-indent:2rem/2em,避免不同浏览器大小不一时的麻烦
+
+常规情况下js根据屏幕宽度动态计算
+  (function (doc, win) {
+        var docEl = doc.documentElement,
+            resizeEvt = 'onorientationchange' in window ? 'onorientationchange' : 'resize',
+            recalc = function () {
+                var clientWidth = docEl.clientWidth;
+                if (!clientWidth) return;
+                if(clientWidth>=750){
+                    docEl.style.fontSize = '100px';
+                }else{
+                    docEl.style.fontSize = 100 * (clientWidth / 750) + 'px';
+                }
+            };
+
+        if (!doc.addEventListener) return;
+        win.addEventListener(resizeEvt, recalc, false);
+        doc.addEventListener('DOMContentLoaded', recalc, false);
+    })(document, window);
+ 
+
+
+resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize'；
+获取浏览器支持的改变方向的函数，如果'orientationchange'存在，就使用这个
+docEl.style.fontSize = 100 * (docEl.clientWidth / 750) + 'px';
+改变字体的尺寸
+```
+ - 提高 浏览性能
+```
+  
+```
 ####常用的移动端框架
 
 zepto.js
