@@ -689,10 +689,15 @@ function detectOrientatioin(){
     }
 }
 ```
-
-
-
-
+- 一些炸鸡
+1.IOS的H5页面滑动不流畅的问题： -webkit-overflow-scrolling : touch;
+2.时间轴 http://www.114time.com/file/gettime.php
+3.inline-block 和margin 0 auto 失效
+   ans：id为father的div,原为块状元素（display:block;），独占一行。当{display:table-cell}或{display:inline-block;}时，#father变为行内元素（display:inline-block;），不能独占一行，{margin:0 auto；}就失效了。
+  
+  ex：display:inline-block的几个应用及bug   http://www.css88.com/archives/1465
+   
+   
 ####常用的移动端框架
 
 zepto.js
